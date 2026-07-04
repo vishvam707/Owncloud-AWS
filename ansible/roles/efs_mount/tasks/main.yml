@@ -12,7 +12,7 @@
     fstype: efs
     opts: "_netdev,tls,accesspoint={{ efs_ap_id }}"
     state: mounted
-    
+
 - name: Fix EFS permissions for ownCloud
-  shell: chown -R 33:33 /ruta/donde/montaste/efs/config
+  shell: chown -R 33:33 /mnt/efs
   become: yes
