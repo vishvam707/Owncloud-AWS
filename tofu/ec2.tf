@@ -4,21 +4,29 @@ locals {
     set -euo pipefail
     exec > /var/log/user_data.log 2>&1
 
-    # 1 — Install Ansible and Git
     yum update -y
     yum install -y ansible git
 
-    # 2 — Install the Docker Ansible collection
     ansible-galaxy collection install community.docker
 
-    # 3 — Pull and apply configuration from the ansible/ subdirectory of the repo
+    cat > /tmp/extra-vars.yml <<'VARSEOF'
+    efs_id: "${aws_efs_file_system.owncloud.id}"
+    efs_ap_id: "${aws_efs_access_point.owncloud.id}"
+    rds_address: "${aws_db_instance.owncloud.address}"
+    db_name: "${var.db_name}"
+    db_username: "${var.db_username}"
+    db_password: "${var.db_password}"
+    owncloud_admin_password: "${var.owncloud_admin_password}"
+    alb_dns: "${aws_lb.owncloud.dns_name}"
+    VARSEOF
+
     ansible-pull \
       -U https://github.com/nicolasduarter/acc-owncloud-project.git \
       --checkout main \
       --directory /tmp/ansible-pull \
       -i localhost, \
       ansible/site.yml \
-      --extra-vars "efs_id=${aws_efs_file_system.owncloud.id} efs_ap_id=${aws_efs_access_point.owncloud.id} rds_address=${aws_db_instance.owncloud.address} db_name=${var.db_name} db_username=${var.db_username} db_password=${var.db_password} owncloud_admin_password=${var.owncloud_admin_password} alb_dns=${aws_lb.owncloud.dns_name}"
+      --extra-vars @/tmp/extra-vars.yml
   USERDATA
   )
 }
