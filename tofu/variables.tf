@@ -27,7 +27,6 @@ variable "ami_id" {
 }
 
 variable "iam_instance_profile" {
-  description = "IAM instance profile provided by the Learner Lab — do not create a new one"
-  type        = string
-  default     = "LabInstanceProfile"
+  type    = string
+  default = "LabRole" # Cambiado para que coincida con el rol correcto
 }
