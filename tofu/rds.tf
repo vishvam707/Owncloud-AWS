@@ -32,7 +32,7 @@ resource "aws_db_parameter_group" "owncloud" {
 resource "aws_db_instance" "owncloud" {
   identifier        = "owncloud-rds"
   engine            = "mysql"
-  engine_version    = "8.0"
+  engine_version    = "8.0.46"
   instance_class    = "db.t3.micro"
   allocated_storage = 20
   storage_type      = "gp2"
