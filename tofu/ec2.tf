@@ -1,38 +1,26 @@
 locals {
-  user_data = base64encode(templatestring(
-    <<-USERDATA
-      #!/bin/bash
-      set -euo pipefail
-      exec > /var/log/user_data.log 2>&1
+  user_data = base64encode(<<-USERDATA
+    #!/bin/bash
+    set -euo pipefail
+    exec > /var/log/user_data.log 2>&1
 
-      # 1 — Install Ansible and Git
-      yum update -y
-      yum install -y ansible git
+    # 1 — Install Ansible and Git
+    yum update -y
+    yum install -y ansible git
 
-      # 2 — Install the Docker Ansible collection
-      ansible-galaxy collection install community.docker
+    # 2 — Install the Docker Ansible collection
+    ansible-galaxy collection install community.docker
 
-      # 3 — Pull and apply configuration from the ansible/ subdirectory of the repo
-      ansible-pull \
-        -U https://github.com/nicolasduarter/acc-owncloud-project.git \
-        --checkout main \
-        --directory /tmp/ansible-pull \
-        -i localhost, \
-        ansible/site.yml \
-        --extra-vars "efs_id=${efs_id} efs_ap_id=${efs_ap_id} rds_address=${rds_address} db_name=${db_name} db_username=${db_username} db_password=${db_password} owncloud_admin_password=${owncloud_admin_password} alb_dns=${alb_dns}"
-    USERDATA
-    ,
-    {
-      efs_id                  = aws_efs_file_system.owncloud.id
-      efs_ap_id               = aws_efs_access_point.owncloud.id
-      rds_address             = aws_db_instance.owncloud.address
-      db_name                 = var.db_name
-      db_username             = var.db_username
-      db_password             = var.db_password
-      owncloud_admin_password = var.owncloud_admin_password
-      alb_dns                 = aws_lb.owncloud.dns_name
-    }
-  ))
+    # 3 — Pull and apply configuration from the ansible/ subdirectory of the repo
+    ansible-pull \
+      -U https://github.com/nicolasduarter/acc-owncloud-project.git \
+      --checkout main \
+      --directory /tmp/ansible-pull \
+      -i localhost, \
+      ansible/site.yml \
+      --extra-vars "efs_id=${aws_efs_file_system.owncloud.id} efs_ap_id=${aws_efs_access_point.owncloud.id} rds_address=${aws_db_instance.owncloud.address} db_name=${var.db_name} db_username=${var.db_username} db_password=${var.db_password} owncloud_admin_password=${var.owncloud_admin_password} alb_dns=${aws_lb.owncloud.dns_name}"
+  USERDATA
+  )
 }
 
 resource "aws_launch_template" "owncloud" {
@@ -92,7 +80,6 @@ resource "aws_autoscaling_group" "owncloud" {
   }
 }
 
-# Scale-out: add 1 instance when CPU > 70% for 2 consecutive minutes
 resource "aws_autoscaling_policy" "scale_out" {
   name                   = "owncloud-scale-out"
   autoscaling_group_name = aws_autoscaling_group.owncloud.name
@@ -114,7 +101,6 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   dimensions          = { AutoScalingGroupName = aws_autoscaling_group.owncloud.name }
 }
 
-# Scale-in: remove 1 instance when CPU < 30% for 5 consecutive minutes
 resource "aws_autoscaling_policy" "scale_in" {
   name                   = "owncloud-scale-in"
   autoscaling_group_name = aws_autoscaling_group.owncloud.name
