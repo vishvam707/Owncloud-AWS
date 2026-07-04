@@ -1,0 +1,20 @@
+---
+- name: Run ownCloud container
+  community.docker.docker_container:
+    name: owncloud
+    image: owncloud/server:latest
+    restart_policy: unless-stopped
+    published_ports:
+      - "8080:8080"
+    volumes:
+      - /mnt/efs:/mnt/data
+    env:
+      OWNCLOUD_DB_TYPE: mysql
+      OWNCLOUD_DB_HOST: "{{ rds_address }}"
+      OWNCLOUD_DB_PORT: "3306"
+      OWNCLOUD_DB_NAME: "{{ db_name }}"
+      OWNCLOUD_DB_USERNAME: "{{ db_username }}"
+      OWNCLOUD_DB_PASSWORD: "{{ db_password }}"
+      OWNCLOUD_ADMIN_USERNAME: admin
+      OWNCLOUD_ADMIN_PASSWORD: "{{ owncloud_admin_password }}"
+      OWNCLOUD_TRUSTED_DOMAINS: "{{ alb_dns }}"
