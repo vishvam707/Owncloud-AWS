@@ -39,10 +39,6 @@ resource "aws_launch_template" "owncloud" {
   vpc_security_group_ids = [aws_security_group.sg_app.id]
   user_data              = local.user_data
 
-  iam_instance_profile {
-    name = var.iam_instance_profile
-  }
-
   block_device_mappings {
     device_name = "/dev/xvda"
     ebs {
