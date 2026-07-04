@@ -25,8 +25,3 @@ variable "ami_id" {
   type        = string
   default     = "ami-08f44e8eca9095668"
 }
-
-variable "iam_instance_profile" {
-  type    = string
-  default = "LabRole" # Cambiado para que coincida con el rol correcto
-}
