@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  connection: local
+  become: true
+  roles:
+    - docker
+    - efs_mount
+    - owncloud_container

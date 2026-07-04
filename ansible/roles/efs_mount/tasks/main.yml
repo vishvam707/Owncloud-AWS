@@ -1,0 +1,14 @@
+---
+- name: Create EFS mount point
+  file:
+    path: /mnt/efs
+    state: directory
+    mode: "0755"
+
+- name: Mount EFS via access point
+  mount:
+    path: /mnt/efs
+    src: "{{ efs_id }}:/"
+    fstype: efs
+    opts: "_netdev,tls,accesspoint={{ efs_ap_id }}"
+    state: mounted
