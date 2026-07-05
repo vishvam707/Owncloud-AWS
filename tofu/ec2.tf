@@ -72,6 +72,11 @@ resource "aws_launch_template" "owncloud" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [
+    aws_efs_mount_target.a,
+    aws_efs_mount_target.b
+  ]
 }
 
 resource "aws_autoscaling_group" "owncloud" {
