@@ -25,5 +25,5 @@
       OWNCLOUD_DB_PASSWORD: "{{ db_password }}"
       OWNCLOUD_ADMIN_USERNAME: admin
       OWNCLOUD_ADMIN_PASSWORD: "{{ owncloud_admin_password }}"
-      OWNCLOUD_TRUSTED_DOMAINS: "{{ alb_dns }} {{ instance_ip.stdout }} localhost"
+      OWNCLOUD_TRUSTED_DOMAINS: "{{ alb_dns }},{{ instance_ip.stdout }},localhost"
       OWNCLOUD_SKIP_CHOWN: "true"
