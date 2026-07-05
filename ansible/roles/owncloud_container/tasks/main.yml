@@ -1,22 +1,11 @@
 ---
-- name: Asegurar permisos en EFS para ownCloud
-  file:
-    path: "{{ item }}"
-    owner: 33
-    group: 33
-    mode: '0770'
-    state: directory
-  loop:
-    - /var/www/owncloud/custom
-    - /var/www/owncloud/config
-  become: true
 - name: Run ownCloud container
   community.docker.docker_container:
     name: owncloud
     image: owncloud/server:latest
     restart_policy: unless-stopped
     published_ports:
-      - "8080:80"
+      - "8080:8080"
     volumes:
       - /mnt/efs:/mnt/data
     env:
