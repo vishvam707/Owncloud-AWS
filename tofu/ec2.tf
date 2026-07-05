@@ -10,7 +10,7 @@ locals {
 
       ansible-galaxy collection install community.docker
 
-      cat > /tmp/extra-vars.yml <<'VARSEOF'
+      cat > /tmp/extra-vars.yml << EOF
       efs_id: "${efs_id}"
       efs_ap_id: "${efs_ap_id}"
       rds_address: "${rds_address}"
@@ -19,7 +19,7 @@ locals {
       db_password: "${db_password}"
       owncloud_admin_password: "${owncloud_admin_password}"
       alb_dns: "${alb_dns}"
-      VARSEOF
+      EOF
 
       ansible-pull \
         -U https://github.com/nicolasduarter/acc-owncloud-project.git \
