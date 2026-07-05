@@ -10,7 +10,7 @@ locals {
 
       ansible-galaxy collection install community.docker
 
-      cat > /tmp/extra-vars.yml << VARSEOF
+      cat > /tmp/extra-vars.yml <<'VARSEOF'
       efs_id: "$${efs_id}"
       efs_ap_id: "$${efs_ap_id}"
       rds_address: "$${rds_address}"
