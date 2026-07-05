@@ -20,13 +20,13 @@ resource "aws_lb_target_group" "owncloud" {
 
   health_check {
     enabled             = true
-    path                = "/"
+    path                = "/status.php"
     port                = "8080"
     healthy_threshold   = 2
     unhealthy_threshold = 3
     timeout             = 10
     interval            = 30
-    matcher             = "200,400"
+    matcher             = "200"
   }
 
   deregistration_delay = 30
