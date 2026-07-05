@@ -26,7 +26,7 @@ resource "aws_lb_target_group" "owncloud" {
     unhealthy_threshold = 3
     timeout             = 10
     interval            = 30
-    matcher             = "200,302"
+    matcher             = "200,400"
   }
 
   deregistration_delay = 30
