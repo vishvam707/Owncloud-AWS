@@ -104,6 +104,24 @@ resource "aws_security_group_rule" "app_egress_http" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "app_egress_dns_tcp" {
+  type              = "egress"
+  security_group_id = aws_security_group.sg_app.id
+  from_port         = 53
+  to_port           = 53
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "app_egress_dns_udp" {
+  type              = "egress"
+  security_group_id = aws_security_group.sg_app.id
+  from_port         = 53
+  to_port           = 53
+  protocol          = "udp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 # ── sg_rds rules ─────────────────────────────────────────────────
 
 resource "aws_security_group_rule" "rds_ingress_from_app" {
