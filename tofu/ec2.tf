@@ -22,7 +22,7 @@ locals {
       VARSEOF
 
       ansible-pull \
-        -U https://github.com/nicolasduarter/acc-owncloud-project.git \
+        -U https://github.com/vishvam707/Owncloud-AWS.git \
         --checkout main \
         --directory /tmp/ansible-pull \
         -i localhost, \
